@@ -2,34 +2,46 @@
 
 class Program {
     static void Main(string[] args) {
-        int[,] matrix1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}; // первая матрица
-        int[,] matrix2 = {{10, 11}, {12, 13}, {14, 15}}; // вторая матрица
+        int[,,] array = new int[2, 2, 2]; // создаем трехмерный массив размером 2x2x2
 
-        if (matrix1.GetLength(1) != matrix2.GetLength(0)) { // проверяем, можно ли умножить матрицы
-            Console.WriteLine("Невозможно умножить матрицы");
-            return;
-        }
+        Random random = new Random(); // создаем объект для генерации случайных чисел
 
-        int[,] result = new int[matrix1.GetLength(0), matrix2.GetLength(1)]; // результирующая матрица
-
-        // умножаем матрицы
-        for (int i = 0; i < matrix1.GetLength(0); i++) {
-            for (int j = 0; j < matrix2.GetLength(1); j++) {
-                int sum = 0;
-                for (int k = 0; k < matrix1.GetLength(1); k++) {
-                    sum += matrix1[i, k] * matrix2[k, j];
+        // заполняем массив неповторяющимися двузначными числами
+        for (int i = 0; i < array.GetLength(0); i++) {
+            for (int j = 0; j < array.GetLength(1); j++) {
+                for (int k = 0; k < array.GetLength(2); k++) {
+                    int number;
+                    do {
+                        number = random.Next(10, 100); // генерируем случайное двузначное число
+                    } while (Contains(array, number)); // проверяем, не содержится ли число уже в массиве
+                    array[i, j, k] = number; // записываем число в массив
                 }
-                result[i, j] = sum;
             }
         }
 
-        // выводим результат
-        Console.WriteLine("Результат умножения матриц:");
-        for (int i = 0; i < result.GetLength(0); i++) {
-            for (int j = 0; j < result.GetLength(1); j++) {
-                Console.Write(result[i, j] + " ");
+        // выводим массив построчно с указанием индексов каждого элемента
+        for (int i = 0; i < array.GetLength(0); i++) {
+            for (int j = 0; j < array.GetLength(1); j++) {
+                for (int k = 0; k < array.GetLength(2); k++) {
+                    Console.Write($"{array[i, j, k]}({i},{j},{k})\t"); // выводим элемент массива и его индексы
+                }
+                Console.WriteLine(); // переходим на новую строку
             }
-            Console.WriteLine();
+            Console.WriteLine(); // добавляем пустую строку между слоями массива
         }
+    }
+
+    // метод, проверяющий, содержится ли число в трехмерном массиве
+    static bool Contains(int[,,] array, int number) {
+        for (int i = 0; i < array.GetLength(0); i++) {
+            for (int j = 0; j < array.GetLength(1); j++) {
+                for (int k = 0; k < array.GetLength(2); k++) {
+                    if (array[i, j, k] == number) {
+                        return true; // число уже содержится в массиве
+                    }
+                }
+            }
+        }
+        return false; // число не содержится в массиве
     }
 }
